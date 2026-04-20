@@ -54,7 +54,10 @@ class Settings(BaseSettings):
     redis_url: RedisDsn = RedisDsn("redis://localhost:6379/0")
     redis_cache_ttl: int = 3600  # 1 hour default TTL
 
-    # S3/R2 Storage
+    # Local file storage
+    storage_dir: str = "./uploads"
+
+    # S3/R2 Storage (unused – kept for future cloud migration)
     s3_bucket_name: str = "lifepilot-storage"
     s3_region: str = "us-east-1"
     s3_access_key: str = ""

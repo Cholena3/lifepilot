@@ -37,9 +37,7 @@ from app.core.storage import (
     delete_file,
     download_file,
     file_exists,
-    generate_presigned_url,
     get_file_metadata,
-    get_s3_client,
     init_storage,
     upload_file,
 )
@@ -81,11 +79,9 @@ __all__ = [
     # Storage utilities
     "init_storage",
     "close_storage",
-    "get_s3_client",
     "upload_file",
     "download_file",
     "delete_file",
-    "generate_presigned_url",
     "file_exists",
     "get_file_metadata",
 ]

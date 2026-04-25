@@ -10,12 +10,11 @@ import secrets
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Optional, List
 
-from sqlalchemy import DateTime, ForeignKey, String, Text, Boolean, func
-from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
+from sqlalchemy import DateTime, ForeignKey, JSON, String, Text, Boolean, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship as sa_relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import GUID, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
     from app.models.user import User
@@ -47,7 +46,7 @@ class HealthRecordShare(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "health_record_shares"
     
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -77,7 +76,7 @@ class HealthRecordShare(Base, UUIDMixin, TimestampMixin):
     )
     
     record_ids: Mapped[List] = mapped_column(
-        JSONB,
+        JSON,
         nullable=False,
         default=list,
     )
@@ -153,7 +152,7 @@ class HealthShareAccessLog(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "health_share_access_logs"
     
     share_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("health_record_shares.id", ondelete="CASCADE"),
         nullable=False,
         index=True,

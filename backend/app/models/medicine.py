@@ -11,6 +11,7 @@ from datetime import datetime, date, time
 from enum import Enum
 from typing import TYPE_CHECKING, Optional, List
 
+import sqlalchemy as sa
 from sqlalchemy import (
     Boolean,
     Date,
@@ -22,12 +23,10 @@ from sqlalchemy import (
     Time,
     func,
 )
-from sqlalchemy.dialects.postgresql import UUID, JSONB as postgresql_JSONB
-from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column, relationship as sa_relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import GUID, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
     from app.models.user import User
@@ -87,14 +86,14 @@ class Medicine(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "medicines"
     
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     
     health_record_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("health_records.id", ondelete="SET NULL"),
         nullable=True,
         index=True,
@@ -122,7 +121,7 @@ class Medicine(Base, UUIDMixin, TimestampMixin):
     )
     
     reminder_times: Mapped[Optional[list]] = mapped_column(
-        postgresql.JSONB,
+        sa.JSON,
         nullable=True,
     )
     
@@ -189,7 +188,7 @@ class MedicineDose(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "medicine_doses"
     
     medicine_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("medicines.id", ondelete="CASCADE"),
         nullable=False,
         index=True,

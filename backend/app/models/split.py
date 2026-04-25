@@ -11,11 +11,10 @@ from typing import TYPE_CHECKING, Optional, List
 from enum import Enum
 
 from sqlalchemy import Date, DateTime, ForeignKey, Numeric, String, Text, Boolean, func, Enum as SQLEnum
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import GUID, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
     from app.models.user import User
@@ -45,7 +44,7 @@ class SplitGroup(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "split_groups"
     
     created_by: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -103,14 +102,14 @@ class SplitGroupMember(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "split_group_members"
     
     group_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("split_groups.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     
     user_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="SET NULL"),
         nullable=True,
         index=True,
@@ -182,14 +181,14 @@ class SharedExpense(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "shared_expenses"
     
     group_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("split_groups.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     
     paid_by: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("split_group_members.id", ondelete="RESTRICT"),
         nullable=False,
         index=True,
@@ -254,14 +253,14 @@ class ExpenseSplit(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "expense_splits"
     
     shared_expense_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("shared_expenses.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     
     member_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("split_group_members.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -309,21 +308,21 @@ class Settlement(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "settlements"
     
     group_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("split_groups.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     
     from_member: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("split_group_members.id", ondelete="RESTRICT"),
         nullable=False,
         index=True,
     )
     
     to_member: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("split_group_members.id", ondelete="RESTRICT"),
         nullable=False,
         index=True,

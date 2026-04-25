@@ -10,12 +10,11 @@ import secrets
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional, List
 
-from sqlalchemy import DateTime, ForeignKey, String, Text, func
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import DateTime, ForeignKey, JSON, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship as sa_relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import GUID, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
     from app.models.user import User
@@ -77,7 +76,7 @@ class EmergencyInfo(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "emergency_info"
     
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         unique=True,  # One emergency info per user
@@ -98,31 +97,31 @@ class EmergencyInfo(Base, UUIDMixin, TimestampMixin):
     )
     
     allergies: Mapped[Optional[List]] = mapped_column(
-        JSONB,
+        JSON,
         nullable=True,
         default=list,
     )
     
     medical_conditions: Mapped[Optional[List]] = mapped_column(
-        JSONB,
+        JSON,
         nullable=True,
         default=list,
     )
     
     emergency_contacts: Mapped[Optional[List]] = mapped_column(
-        JSONB,
+        JSON,
         nullable=True,
         default=list,
     )
     
     current_medications: Mapped[Optional[List]] = mapped_column(
-        JSONB,
+        JSON,
         nullable=True,
         default=list,
     )
     
     visible_fields: Mapped[Optional[List]] = mapped_column(
-        JSONB,
+        JSON,
         nullable=True,
         default=lambda: EmergencyInfoField.ALL.copy(),
     )

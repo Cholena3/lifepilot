@@ -9,12 +9,11 @@ import uuid
 from datetime import datetime, date
 from typing import TYPE_CHECKING, Optional
 
-from sqlalchemy import Date, DateTime, ForeignKey, Integer, Numeric, String, Text, Boolean, func
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import Date, DateTime, ForeignKey, Integer, JSON, Numeric, String, Text, Boolean, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import GUID, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
     from app.models.user import User
@@ -39,7 +38,7 @@ class ExpenseCategory(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "expense_categories"
     
     user_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=True,
         index=True,
@@ -95,14 +94,14 @@ class Expense(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "expenses"
     
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     
     category_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("expense_categories.id", ondelete="RESTRICT"),
         nullable=False,
         index=True,
@@ -130,7 +129,7 @@ class Expense(Base, UUIDMixin, TimestampMixin):
     )
     
     ocr_data: Mapped[Optional[dict]] = mapped_column(
-        JSONB,
+        JSON,
         nullable=True,
     )
     

@@ -17,15 +17,15 @@ from sqlalchemy import (
     DateTime,
     Enum,
     ForeignKey,
+    JSON,
     String,
     Text,
     func,
 )
-from sqlalchemy.dialects.postgresql import ARRAY, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import GUID, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
     from app.models.user import User
@@ -65,7 +65,7 @@ class Achievement(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "achievements"
 
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -92,7 +92,7 @@ class Achievement(Base, UUIDMixin, TimestampMixin):
     # Store document IDs as an array for linking to document vault
     # Requirement 29.3: Allow attaching supporting documents
     document_ids: Mapped[Optional[List[uuid.UUID]]] = mapped_column(
-        ARRAY(UUID(as_uuid=True)),
+        JSON,
         nullable=True,
         default=list,
     )

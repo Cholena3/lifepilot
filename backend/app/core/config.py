@@ -3,7 +3,7 @@
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import PostgresDsn, RedisDsn, field_validator
+from pydantic import RedisDsn, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -43,9 +43,7 @@ class Settings(BaseSettings):
         return v
 
     # Database
-    database_url: PostgresDsn = PostgresDsn(
-        "postgresql+asyncpg://postgres:postgres@localhost:5432/lifepilot"
-    )
+    database_url: str = "mysql+aiomysql://root@localhost:3306/lifepilot"
     db_pool_size: int = 5
     db_max_overflow: int = 10
     db_pool_timeout: int = 30

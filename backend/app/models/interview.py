@@ -9,6 +9,7 @@ from datetime import date, datetime
 from typing import TYPE_CHECKING, Optional
 
 from sqlalchemy import (
+    JSON,
     Boolean,
     Date,
     DateTime,
@@ -19,11 +20,10 @@ from sqlalchemy import (
     Text,
     func,
 )
-from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import GUID, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
     from app.models.job_application import JobApplication
@@ -68,7 +68,7 @@ class InterviewNote(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "interview_notes"
 
     application_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("job_applications.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -91,12 +91,12 @@ class InterviewNote(Base, UUIDMixin, TimestampMixin):
         nullable=True,
     )
     questions_asked: Mapped[Optional[list]] = mapped_column(
-        JSONB,
+        JSON,
         nullable=True,
         default=list,
     )
     answers_prepared: Mapped[Optional[list]] = mapped_column(
-        JSONB,
+        JSON,
         nullable=True,
         default=list,
     )
@@ -152,7 +152,7 @@ class InterviewPreparationReminder(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "interview_preparation_reminders"
 
     interview_note_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("interview_notes.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -207,7 +207,7 @@ class QuestionAnswer(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "interview_qa"
 
     interview_note_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("interview_notes.id", ondelete="CASCADE"),
         nullable=False,
         index=True,

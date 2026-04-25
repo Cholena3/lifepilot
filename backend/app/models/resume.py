@@ -13,6 +13,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Optional, Any
 
 from sqlalchemy import (
+    JSON,
     DateTime,
     Enum,
     ForeignKey,
@@ -21,11 +22,10 @@ from sqlalchemy import (
     Text,
     func,
 )
-from sqlalchemy.dialects.postgresql import JSON, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import GUID, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
     from app.models.user import User
@@ -63,7 +63,7 @@ class Resume(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "resumes"
 
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -137,7 +137,7 @@ class ResumeVersion(Base, UUIDMixin):
     __tablename__ = "resume_versions"
 
     resume_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("resumes.id", ondelete="CASCADE"),
         nullable=False,
         index=True,

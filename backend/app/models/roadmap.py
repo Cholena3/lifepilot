@@ -10,6 +10,7 @@ from decimal import Decimal
 from typing import TYPE_CHECKING, Optional
 
 from sqlalchemy import (
+    JSON,
     Boolean,
     Date,
     DateTime,
@@ -21,11 +22,10 @@ from sqlalchemy import (
     Text,
     func,
 )
-from sqlalchemy.dialects.postgresql import ARRAY, JSON, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import GUID, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
     from app.models.user import User
@@ -72,7 +72,7 @@ class CareerRoadmap(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "career_roadmaps"
 
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -143,7 +143,7 @@ class RoadmapMilestone(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "roadmap_milestones"
 
     roadmap_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("career_roadmaps.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -175,7 +175,7 @@ class RoadmapMilestone(Base, UUIDMixin, TimestampMixin):
         default=MilestoneStatus.NOT_STARTED,
     )
     required_skills: Mapped[Optional[list[str]]] = mapped_column(
-        ARRAY(String),
+        JSON,
         nullable=True,
     )
 
@@ -207,7 +207,7 @@ class SkillGap(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "skill_gaps"
 
     roadmap_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("career_roadmaps.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -270,7 +270,7 @@ class ResourceRecommendation(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "resource_recommendations"
 
     skill_gap_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("skill_gaps.id", ondelete="CASCADE"),
         nullable=False,
         index=True,

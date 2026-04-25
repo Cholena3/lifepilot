@@ -21,7 +21,6 @@ import logging
 from typing import Any, Optional, Type, TypeVar
 
 from sqlalchemy import String, Text, TypeDecorator
-from sqlalchemy.dialects.postgresql import JSONB
 
 logger = logging.getLogger(__name__)
 

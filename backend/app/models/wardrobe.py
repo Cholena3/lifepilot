@@ -11,12 +11,11 @@ from decimal import Decimal
 from enum import Enum
 from typing import TYPE_CHECKING, Optional, List
 
-from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, Numeric, String, Text, func
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, JSON, Numeric, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship as sa_relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import GUID, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
     from app.models.user import User
@@ -74,7 +73,7 @@ class WardrobeItem(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "wardrobe_items"
     
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -144,7 +143,7 @@ class WardrobeItem(Base, UUIDMixin, TimestampMixin):
     )
     
     occasions: Mapped[Optional[List[str]]] = mapped_column(
-        JSONB,
+        JSON,
         nullable=True,
         default=list,
     )
@@ -183,7 +182,7 @@ class WearLog(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "wear_logs"
     
     item_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("wardrobe_items.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -216,7 +215,7 @@ class Outfit(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "outfits"
     
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -260,14 +259,14 @@ class OutfitItem(Base, UUIDMixin):
     __tablename__ = "outfit_items"
     
     outfit_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("outfits.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     
     wardrobe_item_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("wardrobe_items.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -294,14 +293,14 @@ class OutfitPlan(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "outfit_plans"
     
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     
     outfit_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("outfits.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -345,7 +344,7 @@ class PackingList(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "packing_lists"
     
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -399,14 +398,14 @@ class PackingListItem(Base, UUIDMixin):
     __tablename__ = "packing_list_items"
     
     packing_list_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("packing_lists.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     
     wardrobe_item_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("wardrobe_items.id", ondelete="SET NULL"),
         nullable=True,
         index=True,

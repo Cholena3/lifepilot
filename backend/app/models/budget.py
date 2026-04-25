@@ -12,11 +12,10 @@ from enum import Enum
 from typing import TYPE_CHECKING, Optional
 
 from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Numeric, String, func
-from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import GUID, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
     from app.models.expense import ExpenseCategory
@@ -56,14 +55,14 @@ class Budget(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "budgets"
     
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     
     category_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("expense_categories.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -141,14 +140,14 @@ class BudgetHistory(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "budget_history"
     
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     
     category_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID(),
         ForeignKey("expense_categories.id", ondelete="SET NULL"),
         nullable=True,
         index=True,

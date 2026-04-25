@@ -265,6 +265,10 @@ class OTPResponse(BaseModel):
         description="OTP validity in seconds",
         examples=[300],
     )
+    dev_otp: str | None = Field(
+        default=None,
+        description="OTP code (only returned in dev mode when SMS gateway is not configured)",
+    )
 
 
 class OTPVerifyResponse(BaseModel):

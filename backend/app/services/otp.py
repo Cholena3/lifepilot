@@ -150,7 +150,7 @@ async def send_otp_sms(phone: str, otp: str) -> bool:
         )
 
 
-async def send_otp(phone: str) -> int:
+async def send_otp(phone: str) -> tuple[int, str | None]:
     """Generate, store, and send OTP to phone number.
     
     Validates: Requirements 1.4
@@ -159,10 +159,14 @@ async def send_otp(phone: str) -> int:
         phone: Phone number to send OTP to.
         
     Returns:
-        TTL in seconds for the OTP validity.
+        Tuple of (TTL in seconds, OTP string if in dev mode else None).
     """
     otp = generate_otp()
     await store_otp(phone, otp)
     await send_otp_sms(phone, otp)
     
-    return OTP_TTL_SECONDS
+    # In dev mode (no SMS gateway), return the OTP so the frontend can show it
+    if not settings.sms_gateway_url or not settings.sms_api_key:
+        return OTP_TTL_SECONDS, otp
+    
+    return OTP_TTL_SECONDS, None

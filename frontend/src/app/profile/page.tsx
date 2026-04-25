@@ -91,7 +91,6 @@ export default function ProfileWizardPage() {
       degree: "",
       branch: "",
       cgpa: null,
-      backlogs: null,
       graduationYear: null,
     },
   });
@@ -147,7 +146,6 @@ export default function ProfileWizardPage() {
           degree: studentProfile.degree || "",
           branch: studentProfile.branch || "",
           cgpa: studentProfile.cgpa,
-          backlogs: studentProfile.backlogs,
           graduationYear: studentProfile.graduation_year,
         });
       }
@@ -199,7 +197,6 @@ export default function ProfileWizardPage() {
         degree: data.degree || null,
         branch: data.branch || null,
         cgpa: data.cgpa,
-        backlogs: data.backlogs,
         graduation_year: data.graduationYear,
       });
       // Refresh completion percentage
@@ -526,7 +523,7 @@ export default function ProfileWizardPage() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={studentForm.control}
                       name="cgpa"
@@ -543,28 +540,6 @@ export default function ProfileWizardPage() {
                               value={field.value ?? ""}
                               onChange={(e) =>
                                 field.onChange(e.target.value ? parseFloat(e.target.value) : null)
-                              }
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={studentForm.control}
-                      name="backlogs"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Backlogs</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              min="0"
-                              placeholder="0"
-                              value={field.value ?? ""}
-                              onChange={(e) =>
-                                field.onChange(e.target.value ? parseInt(e.target.value) : null)
                               }
                             />
                           </FormControl>

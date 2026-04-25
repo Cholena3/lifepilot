@@ -261,11 +261,12 @@ async def send_otp(
         HTTPException 400: Invalid phone number format
         HTTPException 500: Failed to send SMS
     """
-    expires_in = await otp_service.send_otp(phone=request.phone)
+    expires_in, dev_otp = await otp_service.send_otp(phone=request.phone)
     
     return OTPResponse(
         message="OTP sent successfully",
         expires_in=expires_in,
+        dev_otp=dev_otp,
     )
 
 

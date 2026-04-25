@@ -41,6 +41,7 @@ export default function VerifyPhonePage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
+  const [devOtp, setDevOtp] = useState<string | null>(null);
   const { user, setUser } = useAuthStore();
 
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -65,11 +66,20 @@ export default function VerifyPhonePage() {
     setError(null);
 
     try {
-      await authApi.sendOTP({ phone: data.phone });
+      const response = await authApi.sendOTP({ phone: data.phone });
       setPhone(data.phone);
       setStep("otp");
       setCountdown(300); // 5 minutes
-      setSuccess("OTP sent successfully! Check your phone.");
+      
+      // In dev mode, auto-fill the OTP
+      if (response.dev_otp) {
+        setDevOtp(response.dev_otp);
+        const digits = response.dev_otp.split("");
+        setOtpValues(digits);
+        setSuccess(`OTP sent! (Dev mode — your code is: ${response.dev_otp})`);
+      } else {
+        setSuccess("OTP sent successfully! Check your phone.");
+      }
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);
@@ -119,9 +129,16 @@ export default function VerifyPhonePage() {
     setError(null);
 
     try {
-      await authApi.sendOTP({ phone });
+      const response = await authApi.sendOTP({ phone });
       setCountdown(300);
-      setSuccess("OTP resent successfully!");
+      if (response.dev_otp) {
+        setDevOtp(response.dev_otp);
+        const digits = response.dev_otp.split("");
+        setOtpValues(digits);
+        setSuccess(`OTP resent! (Dev mode — your code is: ${response.dev_otp})`);
+      } else {
+        setSuccess("OTP resent successfully!");
+      }
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);

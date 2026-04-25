@@ -11,14 +11,13 @@ export const studentProfileSchema = z.object({
   institution: z.string().max(200).optional(),
   degree: z.string().max(100).optional(),
   branch: z.string().max(100).optional(),
-  cgpa: z
+  cgpa: z.coerce
     .number()
     .min(0, "CGPA must be at least 0.0")
     .max(10, "CGPA cannot exceed 10.0")
     .optional()
     .nullable(),
-  backlogs: z.number().int().min(0, "Backlogs cannot be negative").optional().nullable(),
-  graduationYear: z
+  graduationYear: z.coerce
     .number()
     .int()
     .min(1990, "Invalid graduation year")
@@ -31,8 +30,8 @@ export const careerPreferencesSchema = z
   .object({
     preferredRoles: z.array(z.string()).optional(),
     preferredLocations: z.array(z.string()).optional(),
-    minSalary: z.number().min(0, "Minimum salary cannot be negative").optional().nullable(),
-    maxSalary: z.number().min(0, "Maximum salary cannot be negative").optional().nullable(),
+    minSalary: z.coerce.number().min(0, "Minimum salary cannot be negative").optional().nullable(),
+    maxSalary: z.coerce.number().min(0, "Maximum salary cannot be negative").optional().nullable(),
     jobType: z.enum(["full_time", "part_time", "internship", "contract"]).optional().nullable(),
   })
   .refine(

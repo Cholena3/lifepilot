@@ -37,6 +37,7 @@ export interface OTPVerifyRequest {
 export interface OTPResponse {
   message: string;
   expires_in: number;
+  dev_otp?: string | null;
 }
 
 export interface OTPVerifyResponse {
